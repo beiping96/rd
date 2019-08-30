@@ -71,8 +71,8 @@ func (i *cluster) construct(cfg Config) error {
 	if cfg.WriteTimeout > 0 {
 		options.WriteTimeout = cfg.WriteTimeout
 	}
-	options.KeepAlive = cfg.MaxOpenConns
-	options.AliveTime = cfg.MaxLifetime
+	options.KeepAlive = cfg.OpenConns
+	options.AliveTime = cfg.Lifetime
 	c, err := clusterDriver.NewCluster(options)
 	if err != nil {
 		return fmt.Errorf("github.com/chasex/redis-go-cluster NewCluster error %v",

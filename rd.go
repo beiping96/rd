@@ -39,8 +39,8 @@ type Config struct {
 	ReadTimeout  time.Duration
 	WriteTimeout time.Duration
 
-	MaxOpenConns int
-	MaxLifetime  time.Duration
+	OpenConns int
+	Lifetime  time.Duration
 
 	Prefix func(key string) (keyWithPrefix string)
 }
@@ -60,11 +60,11 @@ func New(cfg Config) (cli RD, err error) {
 		cfg.WriteTimeout = time.Duration(10) * time.Second
 	}
 
-	if cfg.MaxOpenConns <= 0 {
-		cfg.MaxOpenConns = 20
+	if cfg.OpenConns <= 0 {
+		cfg.OpenConns = 20
 	}
-	if cfg.MaxLifetime <= 0 {
-		cfg.MaxLifetime = time.Duration(math.MaxInt16) * time.Hour
+	if cfg.Lifetime <= 0 {
+		cfg.Lifetime = time.Duration(math.MaxInt16) * time.Hour
 	}
 
 	if cfg.Prefix == nil {

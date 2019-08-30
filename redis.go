@@ -73,7 +73,7 @@ func (i *redis) Close() { i.Pool.Close() }
 
 func (i *redis) construct(cfg Config) error {
 	options := []redisDriver.DialOption{
-		redisDriver.DialKeepAlive(cfg.MaxLifetime),
+		redisDriver.DialKeepAlive(cfg.Lifetime),
 	}
 	if len(cfg.Password) > 0 {
 		options = append(options, redisDriver.DialPassword(cfg.Password))
@@ -91,7 +91,7 @@ func (i *redis) construct(cfg Config) error {
 		return redisDriver.Dial("tcp", cfg.Address, options...)
 	}
 	*i = redis{
-		Pool: redisDriver.NewPool(dial, cfg.MaxOpenConns),
+		Pool: redisDriver.NewPool(dial, cfg.OpenConns),
 		cfg:  cfg,
 	}
 	return nil
