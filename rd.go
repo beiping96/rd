@@ -6,6 +6,7 @@ import (
 	"time"
 )
 
+// RD declare redis client method
 type RD interface {
 	ErrNil() error
 
@@ -29,22 +30,34 @@ type RD interface {
 	construct(Config) error
 }
 
+// Config desc redis client method
 type Config struct {
+	// if is redis-cluster
 	IsCluster bool
 
-	Address  string
+	// required redis addr
+	Address string
+	// if has password
 	Password string
 
-	DialTimeout  time.Duration
-	ReadTimeout  time.Duration
+	// default is 10 seconds
+	DialTimeout time.Duration
+	// default is 10 seconds
+	ReadTimeout time.Duration
+	// default is 10 seconds
 	WriteTimeout time.Duration
 
+	// default is 20
 	OpenConns int
-	Lifetime  time.Duration
+	// default is keep alive
+	Lifetime time.Duration
 
+	// Prefix will wrap redis-key at head
+	// default is nil
 	Prefix func(key string) (keyWithPrefix string)
 }
 
+// New redis client with config
 func New(cfg Config) (cli RD, err error) {
 	if len(cfg.Address) == 0 {
 		return nil, fmt.Errorf("RD Config NIL Address")
