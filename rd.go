@@ -8,8 +8,10 @@ import (
 
 // RD declare redis client method
 type RD interface {
+	// ErrNil declare NIL-error
 	ErrNil() error
 
+	// Do execute redis command
 	Do(cmd string, args ...interface{}) (interface{}, error)
 
 	DoBool(cmd string, args ...interface{}) (bool, error)
