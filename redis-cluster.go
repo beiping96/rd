@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	clusterDriver "github.com/chasex/redis-go-cluster"
+	"github.com/pkg/errors"
 )
 
 var _ RD = (*cluster)(nil)
@@ -75,8 +76,7 @@ func (i *cluster) construct(cfg Config) error {
 	options.AliveTime = cfg.Lifetime
 	c, err := clusterDriver.NewCluster(options)
 	if err != nil {
-		return fmt.Errorf("github.com/chasex/redis-go-cluster NewCluster error %v",
-			err)
+		return errors.Wrap(err, "github.com/chasex/redis-go-cluster NewCluster")
 	}
 	*i = cluster{
 		Cluster: c,

@@ -5,6 +5,7 @@ import (
 	"fmt"
 
 	redisDriver "github.com/gomodule/redigo/redis"
+	"github.com/pkg/errors"
 )
 
 var _ RD = (*redis)(nil)
@@ -27,8 +28,7 @@ func (i *redis) Do(cmd string, args ...interface{}) (interface{}, error) {
 	defer cancel()
 	conn, err := i.Pool.GetContext(ctx)
 	if err != nil {
-		return nil, fmt.Errorf("RD %v",
-			err)
+		return nil, errors.Wrap(err, "RD")
 	}
 	defer conn.Close()
 	return conn.Do(cmd, args...)

@@ -1,9 +1,10 @@
 package rd
 
 import (
-	"fmt"
 	"math"
 	"time"
+
+	"github.com/pkg/errors"
 )
 
 // RD declare redis client method
@@ -28,8 +29,6 @@ type RD interface {
 	Scan(src []interface{}, dst ...interface{}) ([]interface{}, error)
 
 	Close()
-
-	construct(Config) error
 }
 
 // Config desc redis client method
@@ -62,7 +61,7 @@ type Config struct {
 // New redis client with config
 func New(cfg Config) (cli RD, err error) {
 	if len(cfg.Address) == 0 {
-		return nil, fmt.Errorf("RD Config NIL Address")
+		return nil, errors.Errorf("RD Config NIL Address")
 	}
 
 	if cfg.DialTimeout <= 0 {
@@ -87,13 +86,20 @@ func New(cfg Config) (cli RD, err error) {
 	}
 
 	if cfg.IsCluster {
-		cli = new(cluster)
+		clusterCli := new(cluster)
+		if err := clusterCli.construct(cfg); err != nil {
+			return nil, errors.Wrapf(err, "RD Construct Cluster %+v",
+				cfg)
+		}
+		cli = clusterCli
 	} else {
-		cli = new(redis)
+		redisCli := new(redis)
+		if err := cli.construct(cfg); err != nil {
+			return nil, errors.Wrapf(err, "RD Construct Redis %+v",
+				cfg)
+		}
+		cli = redisCli
 	}
-	if err := cli.construct(cfg); err != nil {
-		return nil, fmt.Errorf("RD Construct Error %v %+v",
-			err, cfg)
-	}
+
 	return cli, nil
 }
