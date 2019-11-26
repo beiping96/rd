@@ -6,6 +6,8 @@ import (
 	"time"
 )
 
+//go:generate mockgen -source=rd.go -destination mock/mock.go -package mock
+
 // RD declare redis client method
 type RD interface {
 	// ErrNil declare NIL-error
