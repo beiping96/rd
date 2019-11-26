@@ -94,7 +94,7 @@ func New(cfg Config) (cli RD, err error) {
 		cli = clusterCli
 	} else {
 		redisCli := new(redis)
-		if err := cli.construct(cfg); err != nil {
+		if err := redisCli.construct(cfg); err != nil {
 			return nil, errors.Wrapf(err, "RD Construct Redis %+v",
 				cfg)
 		}
