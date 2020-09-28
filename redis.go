@@ -87,6 +87,9 @@ func (i *redis) construct(cfg Config) error {
 	if cfg.WriteTimeout > 0 {
 		options = append(options, redisDriver.DialWriteTimeout(cfg.WriteTimeout))
 	}
+	if cfg.DB > 0 {
+		options = append(options, redisDriver.DialDatabase(cfg.DB))
+	}
 	dial := func() (redisDriver.Conn, error) {
 		return redisDriver.Dial("tcp", cfg.Address, options...)
 	}

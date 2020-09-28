@@ -56,6 +56,11 @@ type Config struct {
 	// Prefix will wrap redis-key at head
 	// default is nil
 	Prefix func(key string) (keyWithPrefix string)
+
+	// DB select redis database
+	// default is nil
+	// useless in cluster
+	DB int
 }
 
 // New redis client with config
@@ -83,6 +88,10 @@ func New(cfg Config) (cli RD, err error) {
 
 	if cfg.Prefix == nil {
 		cfg.Prefix = func(key string) (keyWithPrefix string) { return key }
+	}
+
+	if cfg.DB < 0 {
+		cfg.DB = 0
 	}
 
 	if cfg.IsCluster {
